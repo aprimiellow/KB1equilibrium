@@ -2178,6 +2178,7 @@ textarea:focus {
 }
 
 &lt;/style&gt;
+&lt;style&gt;.navigation{display:none!important}&lt;/style&gt;
 &lt;/head&gt;
 
 &lt;body&gt;
@@ -6977,7 +6978,7 @@ updateSimulation();
     if(action === "prev") showPage(currentPage - 1);
     if(action === "next") showPage(currentPage + 1);
     if(action === "kb3"){
-      /* URL Kegiatan Belajar 3 belum ada di file sumber ini. */
+      window.location.href = "Kegiatan Belajar 3.html";
       return;
     }
   });
