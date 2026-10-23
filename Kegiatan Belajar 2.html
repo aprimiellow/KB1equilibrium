@@ -480,7 +480,7 @@ button{font:inherit;-webkit-appearance:none;appearance:none;}
 &lt;/style&gt;
 &lt;style id=&quot;hide-all-inner-navigation&quot;&gt;
 /* Perbaikan: sembunyikan navigasi yang tertanam di setiap iframe. Navigasi luar halaman tetap dipakai. */
-.navigation, .kb-navigation, nav.navigation, .page-navigation, .bottom-navigation, .navigation-container, .nav-buttons { display:none !important; visibility:hidden !important; height:0 !important; min-height:0 !important; margin:0 !important; padding:0 !important; border:0 !important; }
+.navigation, nav.navigation, .page-navigation, .bottom-navigation, .navigation-container, .nav-buttons { display:none !important; visibility:hidden !important; height:0 !important; min-height:0 !important; margin:0 !important; padding:0 !important; border:0 !important; }
 &lt;/style&gt;
 &lt;/head&gt;
 &lt;body&gt;
@@ -821,7 +821,7 @@ body{
 &lt;/style&gt;
 &lt;style id=&quot;hide-all-inner-navigation&quot;&gt;
 /* Perbaikan: sembunyikan navigasi yang tertanam di setiap iframe. Navigasi luar halaman tetap dipakai. */
-.navigation, .kb-navigation, nav.navigation, .page-navigation, .bottom-navigation, .navigation-container, .nav-buttons { display:none !important; visibility:hidden !important; height:0 !important; min-height:0 !important; margin:0 !important; padding:0 !important; border:0 !important; }
+.navigation, nav.navigation, .page-navigation, .bottom-navigation, .navigation-container, .nav-buttons { display:none !important; visibility:hidden !important; height:0 !important; min-height:0 !important; margin:0 !important; padding:0 !important; border:0 !important; }
 &lt;/style&gt;
 &lt;/head&gt;
 
@@ -1396,7 +1396,7 @@ textarea:focus {
 &lt;/style&gt;
 &lt;style id=&quot;hide-all-inner-navigation&quot;&gt;
 /* Perbaikan: sembunyikan navigasi yang tertanam di setiap iframe. Navigasi luar halaman tetap dipakai. */
-.navigation, .kb-navigation, nav.navigation, .page-navigation, .bottom-navigation, .navigation-container, .nav-buttons { display:none !important; visibility:hidden !important; height:0 !important; min-height:0 !important; margin:0 !important; padding:0 !important; border:0 !important; }
+.navigation, nav.navigation, .page-navigation, .bottom-navigation, .navigation-container, .nav-buttons { display:none !important; visibility:hidden !important; height:0 !important; min-height:0 !important; margin:0 !important; padding:0 !important; border:0 !important; }
 &lt;/style&gt;
 &lt;/head&gt;
 
@@ -2195,7 +2195,7 @@ textarea:focus {
 &lt;style id=&quot;hide-duplicate-navigation&quot;&gt;.navigation{display:none!important;}&lt;/style&gt;
 &lt;style id=&quot;hide-all-inner-navigation&quot;&gt;
 /* Perbaikan: sembunyikan navigasi yang tertanam di setiap iframe. Navigasi luar halaman tetap dipakai. */
-.navigation, .kb-navigation, nav.navigation, .page-navigation, .bottom-navigation, .navigation-container, .nav-buttons { display:none !important; visibility:hidden !important; height:0 !important; min-height:0 !important; margin:0 !important; padding:0 !important; border:0 !important; }
+.navigation, nav.navigation, .page-navigation, .bottom-navigation, .navigation-container, .nav-buttons { display:none !important; visibility:hidden !important; height:0 !important; min-height:0 !important; margin:0 !important; padding:0 !important; border:0 !important; }
 &lt;/style&gt;
 &lt;/head&gt;
 
@@ -3609,7 +3609,7 @@ body {
 &lt;/style&gt;
 &lt;style id=&quot;hide-all-inner-navigation&quot;&gt;
 /* Perbaikan: sembunyikan navigasi yang tertanam di setiap iframe. Navigasi luar halaman tetap dipakai. */
-.navigation, .kb-navigation, nav.navigation, .page-navigation, .bottom-navigation, .navigation-container, .nav-buttons { display:none !important; visibility:hidden !important; height:0 !important; min-height:0 !important; margin:0 !important; padding:0 !important; border:0 !important; }
+.navigation, nav.navigation, .page-navigation, .bottom-navigation, .navigation-container, .nav-buttons { display:none !important; visibility:hidden !important; height:0 !important; min-height:0 !important; margin:0 !important; padding:0 !important; border:0 !important; }
 &lt;/style&gt;
 &lt;/head&gt;
 
@@ -5487,7 +5487,7 @@ strong{
 &lt;/style&gt;
 &lt;style id=&quot;hide-all-inner-navigation&quot;&gt;
 /* Perbaikan: sembunyikan navigasi yang tertanam di setiap iframe. Navigasi luar halaman tetap dipakai. */
-.navigation, .kb-navigation, nav.navigation, .page-navigation, .bottom-navigation, .navigation-container, .nav-buttons { display:none !important; visibility:hidden !important; height:0 !important; min-height:0 !important; margin:0 !important; padding:0 !important; border:0 !important; }
+.navigation, nav.navigation, .page-navigation, .bottom-navigation, .navigation-container, .nav-buttons { display:none !important; visibility:hidden !important; height:0 !important; min-height:0 !important; margin:0 !important; padding:0 !important; border:0 !important; }
 &lt;/style&gt;
 &lt;/head&gt;
 
@@ -6923,11 +6923,22 @@ updateSimulation();
   const wraps = Array.from(document.querySelectorAll(".kb-frame-wrap"));
   let currentPage = 0;
 
+  function removeDuplicateInnerNavigation(frame){
+    if(!frame || !frame.contentDocument) return;
+    const doc = frame.contentDocument;
+    /* Hapus elemen navigasi di dalam dokumen iframe secara langsung.
+       CSS sebelumnya saja ternyata tidak cukup untuk mencegah navigasi ganda. */
+    doc.querySelectorAll(
+      '.navigation, nav.navigation, .page-navigation, .bottom-navigation, .navigation-container, .nav-buttons'
+    ).forEach(function(el){ el.remove(); });
+  }
+
   function syncNavigationToContent(wrap){
     const frame = wrap.querySelector(".kb-frame");
     const nav = wrap.querySelector(".kb-navigation");
     if(!frame || !nav || !frame.contentDocument) return;
 
+    removeDuplicateInnerNavigation(frame);
     const doc = frame.contentDocument;
     const candidates = [
   ".kb-card",
@@ -7039,6 +7050,7 @@ updateSimulation();
     const frame = wrap.querySelector(".kb-frame");
     if(frame){
       frame.addEventListener("load", function(){
+        removeDuplicateInnerNavigation(frame);
         if(wrap.classList.contains("active")) setTimeout(function(){ syncNavigationToContent(wrap); }, 50);
       });
     }
