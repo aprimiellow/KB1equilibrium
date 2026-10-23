@@ -2645,7 +2645,11 @@ function cekJawabanKc1() {
 
     }
 
+    // Pastikan wadah embed mengikuti tinggi feedback yang baru muncul.
+    window.parent.postMessage({type:&quot;kb-height&quot;, page:3, height:Math.max(document.body.scrollHeight, document.documentElement.scrollHeight)}, &quot;*&quot;);
 }
+
+&lt;/script&gt;
 
 &lt;!-- =========================
        NAVIGATION
@@ -2816,6 +2820,8 @@ function cekJawabanKc2() {
 
     }
 
+    // Pastikan wadah embed mengikuti tinggi feedback yang baru muncul.
+    window.parent.postMessage({type:&quot;kb-height&quot;, page:3, height:Math.max(document.body.scrollHeight, document.documentElement.scrollHeight)}, &quot;*&quot;);
 }
 
 &lt;/script&gt;
@@ -6971,7 +6977,7 @@ updateSimulation();
     if(action === "prev") showPage(currentPage - 1);
     if(action === "next") showPage(currentPage + 1);
     if(action === "kb3"){
-      window.location.href = "Kegiatan Belajar 3.html";
+      /* URL Kegiatan Belajar 3 belum ada di file sumber ini. */
       return;
     }
   });
